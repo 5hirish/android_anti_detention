@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DasboardActivity"
+            android:name=".DashboardActivity"
             android:label="@string/title_activity_dasboard"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

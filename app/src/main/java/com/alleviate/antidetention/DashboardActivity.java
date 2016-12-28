@@ -4,6 +4,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +24,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-public class DasboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -33,12 +34,12 @@ public class DasboardActivity extends AppCompatActivity implements NavigationVie
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +60,6 @@ public class DasboardActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +68,12 @@ public class DasboardActivity extends AppCompatActivity implements NavigationVie
                         .setAction("Action", null).show();
             }
         });
+
+        Fragment fragment = new DashboardFragment();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, fragment);
+        ft.commit();
 
     }
 
@@ -118,14 +116,29 @@ public class DasboardActivity extends AppCompatActivity implements NavigationVie
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        String title = "Dashboard";
+        Fragment fragment = null;
+
         if (id == R.id.nav_dashboard) {
-            // Handle the camera action
+
+            fragment = new DashboardFragment();
+
         } else if (id == R.id.nav_schedule) {
+
+            fragment = new ScheduleFragment();
 
         } else if (id == R.id.nav_stats) {
 
+            fragment = new StatsFragment();
+
         } else if (id == R.id.nav_share) {
 
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
