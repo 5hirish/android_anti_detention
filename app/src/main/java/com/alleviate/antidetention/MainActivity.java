@@ -14,5 +14,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent in = new Intent(MainActivity.this, DasboardActivity.class);
         startActivity(in);
+        finish();
     }
 }
