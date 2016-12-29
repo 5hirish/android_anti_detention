@@ -34,14 +34,14 @@ public class TomorrowFragment extends Fragment {
         String movies[] = getResources().getStringArray(R.array.planets_array);
         final ArrayList mcu_movies = new ArrayList<String>(Arrays.asList(movies));
 
-        RecyclerView rv = (RecyclerView)view.findViewById(R.id.recycler_view_today);
+        RecyclerView rv = (RecyclerView)view.findViewById(R.id.recycler_view_tomorrow);
         rv.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         rv.setHasFixedSize(true);
 
         RecyclerView.LayoutManager rvlayoutmanager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(rvlayoutmanager);
 
-        rvadpter = new TodayAdapter(getActivity(), mcu_movies);
+        rvadpter = new TomorrowAdapter(getActivity(), mcu_movies);
         rv.setAdapter(rvadpter);
 
         rv.setItemAnimator(new DefaultItemAnimator());
