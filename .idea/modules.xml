@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AntiDetention.iml" filepath="$PROJECT_DIR$/AntiDetention.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android_anti_detention.iml" filepath="$PROJECT_DIR$/android_anti_detention.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

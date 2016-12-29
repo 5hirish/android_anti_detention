@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashboardFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener{
+public class DashboardFragment extends Fragment{
 
 
     public DashboardFragment() {
@@ -39,10 +39,5 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         tabLayout.setupWithViewPager(mViewPager);
 
         return fragment;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
     }
 }
