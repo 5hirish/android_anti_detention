@@ -7,10 +7,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -41,15 +47,29 @@ public class DayFragment extends Fragment {
         }
     }
 
-
+    RecyclerView.Adapter rvadpter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_day, container, false);
-        TextView tv = (TextView)view.findViewById(R.id.textView);
+        // Inflate the layout for this fragment
 
+        String movies[] = getResources().getStringArray(R.array.planets_array);
+        final ArrayList mcu_movies = new ArrayList<String>(Arrays.asList(movies));
+
+        RecyclerView rv = (RecyclerView)view.findViewById(R.id.recycler_view_day);
+        rv.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        rv.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager rvlayoutmanager = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(rvlayoutmanager);
+
+        rvadpter = new DayAdapter(getActivity(), mcu_movies);
+        rv.setAdapter(rvadpter);
+
+        rv.setItemAnimator(new DefaultItemAnimator());
         FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,30 +80,6 @@ public class DayFragment extends Fragment {
             }
         });
 
-        String day = "";
-        switch (day_pos) {
-            case 0:
-                day =  "Monday";
-                break;
-            case 1:
-                day =  "Tuesday";
-                break;
-            case 2:
-                day =  "Wednesday";
-                break;
-            case 3:
-                day =  "Thursday";                break;
-            case 4:
-                day =  "Friday";
-                break;
-            case 5:
-                day =  "Saturday";
-                break;
-            case 6:
-                day =  "Sunday";
-        }
-
-        tv.setText(day);
         return view;
     }
 
