@@ -33,6 +33,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alleviate.antidetention.DashboardActivity" />
         </activity>
+        <activity android:name=".NotesActivity"></activity>
     </application>
 
 </manifest>
