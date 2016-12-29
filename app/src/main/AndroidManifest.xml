@@ -24,6 +24,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alleviate.antidetention.MainActivity" />
         </activity>
+        <activity
+            android:name=".CreateScheduleActivity"
+            android:label="@string/title_activity_create_schedule"
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.alleviate.antidetention.DashboardActivity" />
+        </activity>
     </application>
 
 </manifest>
