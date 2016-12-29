@@ -18,19 +18,19 @@ public class SectionsPagerAdapterSchedule extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new TodayFragment();
+                return DayFragment.newInstance(0);
             case 1:
-                return new TomorrowFragment();
+                return DayFragment.newInstance(1);
             case 2:
-                return new MonthFragment();
+                return DayFragment.newInstance(2);
             case 3:
-                return new MonthFragment();
+                return DayFragment.newInstance(3);
             case 4:
-                return new MonthFragment();
+                return DayFragment.newInstance(4);
             case 5:
-                return new MonthFragment();
+                return DayFragment.newInstance(5);
             case 6:
-                return new MonthFragment();
+                return DayFragment.newInstance(6);
 
         }
         return null;
