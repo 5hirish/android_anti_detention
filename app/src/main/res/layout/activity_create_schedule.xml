@@ -20,21 +20,28 @@
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <Spinner
-            android:id="@+id/day"
+        <TextView
+            android:text="Monday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/day"
             app:layout_anchor="@id/app_bar"
+            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:textSize="20sp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp" />
 
-        <Spinner
+        <AutoCompleteTextView
             android:id="@+id/lecture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_anchor="@id/app_bar"
             android:textSize="20sp"
+            android:completionThreshold="1"
+            android:hint="Subject"
+            android:popupBackground="@color/white"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
@@ -53,5 +60,7 @@
         app:srcCompat="@drawable/ic_done_24dp"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="bottom|right" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>
