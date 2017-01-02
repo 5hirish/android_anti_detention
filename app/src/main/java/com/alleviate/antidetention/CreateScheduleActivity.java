@@ -40,13 +40,14 @@ public class CreateScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] week_days = getResources().getStringArray(R.array.week_day);
         final ArrayAdapter<String> days_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, week_days);
 
         final AutoCompleteTextView auto_lect = (AutoCompleteTextView) findViewById(R.id.lecture);
-        AutoCompleteTextView auto_lect_staff = (AutoCompleteTextView) findViewById(R.id.lecturer);
-        AutoCompleteTextView auto_lect_hall = (AutoCompleteTextView) findViewById(R.id.lect_room);
+        final AutoCompleteTextView auto_lect_staff = (AutoCompleteTextView) findViewById(R.id.lecturer);
+        final AutoCompleteTextView auto_lect_hall = (AutoCompleteTextView) findViewById(R.id.lect_room);
         final TextView tv_day = (TextView) findViewById(R.id.day);
         final TextView tv_lect_time = (TextView) findViewById(R.id.time_diff);
         final TextView tv_start_time = (TextView) findViewById(R.id.start_time);
@@ -210,7 +211,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                db_lecture_staff = auto_lect.getText().toString();
+                db_lecture_staff = auto_lect_staff.getText().toString();
             }
         });
 
@@ -222,7 +223,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                db_lecture_hall = auto_lect.getText().toString();
+                db_lecture_hall = auto_lect_hall.getText().toString();
             }
         });
 
@@ -231,12 +232,22 @@ public class CreateScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                db_day = tv_day.getText().toString();
+
+                db_lecture = auto_lect.getText().toString();
+
+                db_lecture_staff = auto_lect_staff.getText().toString();
+
+                db_lecture_hall = auto_lect_hall.getText().toString();
+
                 new InsertSchedule().execute();
 
-                Snackbar.make(view, "Adding Schedule", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Schedule Added", Toast.LENGTH_SHORT).show();
+
+                finish();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private ArrayList create_array_adapter(int res_type) {

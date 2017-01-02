@@ -1,5 +1,7 @@
 package com.alleviate.antidetention;
 
+import android.content.Intent;
+import android.os.Debug;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -88,6 +90,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_debug) {
+            Intent in = new Intent(DashboardActivity.this, DebugActivity.class);
+            startActivity(in);
+
         }
 
         return super.onOptionsItemSelected(item);

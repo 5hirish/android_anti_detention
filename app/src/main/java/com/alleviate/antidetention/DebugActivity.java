@@ -17,7 +17,11 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         debug_info = (TextView)findViewById(R.id.debug_info);
+        show_schedule_data();
+
     }
 
     @Override
@@ -68,7 +72,7 @@ public class DebugActivity extends AppCompatActivity {
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_end))+" - "+
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecture))+" - "+
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecturer_staff))+" - "+
-                                    cur.getInt(cur.getColumnIndex(SQLiteHelper.db_schedule_lecturer_hall))+" \n "
+                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecturer_hall))+" \n "
                     );
 
                 }while (cur.moveToNext());
