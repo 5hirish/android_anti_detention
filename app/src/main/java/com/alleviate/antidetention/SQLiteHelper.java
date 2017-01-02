@@ -24,12 +24,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String db_schedule_start = "Start_Time";
     public static final String db_schedule_end = "End_Time";
     public static final String db_schedule_lecture = "Lecture";
-    public static final String db_schedule_lecturer_staff = "Lecturer";
+    public static final String db_schedule_lecturer_staff = "Lecturer_Staff";
+    public static final String db_schedule_lecturer_hall = "Lecture_Hall";
 
     /* Notes */
 
     public static final String db_notes = "Notes";
     public static final String db_notes_id = "Id";
+    public static final String db_notes_lecture_id = "Lecture_Id";
     public static final String db_notes_date = "Date";
     public static final String db_notes_input_type = "Input_Type";
     public static final String db_notes_title = "Title";
@@ -38,6 +40,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String db_notes_start_time = "Start_Time";
     public static final String db_notes_remind_date = "Remind_Date";
     public static final String db_notes_remind_time = "Remind_Time";
+
+    /* Statistics */
+
+    public static final String db_stats = "Stats";
+    public static final String db_stats_id = "Id";
+    public static final String db_stats_lecture_id = "Lecture_Id";
+    public static final String db_stats_date = "Date";
+    public static final String db_stats_status = "Status";
 
     /* Logs Dev */
 
@@ -53,14 +63,19 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String create_db_schedule = "CREATE TABLE "+db_schedule+" ( "+db_schedule_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+db_schedule_day+" VARCHAR NOT NULL, " +
-                ""+db_schedule_start+" VARCHAR NOT NULL, "+db_schedule_end+" VARCHAR NOT NULL, "+db_schedule_lecture+" VARCHAR NOT NULL, "+db_schedule_lecturer_staff+" VARCHAR NOT NULL )";
+                ""+db_schedule_start+" VARCHAR NOT NULL, "+db_schedule_end+" VARCHAR NOT NULL, "+db_schedule_lecture+" VARCHAR NOT NULL, "+db_schedule_lecturer_staff+" VARCHAR NOT NULL ," +
+                ""+db_schedule_lecturer_hall+" VARCHAR NOT NULL)";
 
-        String create_db_notes="CREATE TABLE "+db_notes+" ( "+db_notes_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+db_notes_date+" VARCHAR NOT NULL ," +
+        String create_db_notes = "CREATE TABLE "+db_notes+" ( "+db_notes_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+db_notes_lecture_id+" INTEGER NOT NULL, "+db_notes_date+" VARCHAR NOT NULL ," +
                 ""+db_notes_input_type+" VARCHAR NOT NULL, " + db_notes_title+" VARCHAR NOT NULL, "+db_notes_data+" TEXT NOT NULL, "+db_notes_lecture+" VARCHAR NOT NULL , " +
                 ""+db_notes_start_time+" VARCHAR NOT NULL, "+db_notes_remind_date+" VARCHAR NOT NULL, "+db_notes_remind_time+" VARCHAR NOT NULL )";
 
+        String create_db_stats = "CREATE TABLE "+db_stats+" ( "+db_stats_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+db_stats_lecture_id+" INTEGER NOT NULL, "+db_stats_date+" VARCHAR NOT NULL ," +
+                ""+db_stats_status+" VARCHAR NOT NULL,  )";
+
         sqLiteDatabase.execSQL(create_db_schedule);
         sqLiteDatabase.execSQL(create_db_notes);
+        sqLiteDatabase.execSQL(create_db_stats);
 
         String create_db_logs="CREATE TABLE "+db_logs+" ( "+db_logs_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+db_logs_logs+" VARCHAR NOT NULL )";
         sqLiteDatabase.execSQL(create_db_logs);
@@ -69,11 +84,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int old_version, int new_version) {
 
-
         // Change DayMan Free...!!
-
-        //Todo:: DropTables if exist - DMTask, DMActivity, DMAlarms from previous versions of Kronos Manager
-
     }
 
     // Method to insert developer's logs (Debug Version only !!!).

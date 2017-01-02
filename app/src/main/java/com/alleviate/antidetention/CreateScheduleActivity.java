@@ -42,7 +42,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         final AutoCompleteTextView auto_lect = (AutoCompleteTextView) findViewById(R.id.lecture);
         AutoCompleteTextView auto_lect_staff = (AutoCompleteTextView) findViewById(R.id.lecturer);
-        AutoCompleteTextView auto_lect_hall = (AutoCompleteTextView) findViewById(R.id.lecturer);
+        AutoCompleteTextView auto_lect_hall = (AutoCompleteTextView) findViewById(R.id.lect_room);
         final TextView tv_day = (TextView) findViewById(R.id.day);
         final TextView tv_lect_time = (TextView) findViewById(R.id.time_diff);
         final TextView tv_start_time = (TextView) findViewById(R.id.start_time);
