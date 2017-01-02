@@ -71,7 +71,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 ""+db_notes_start_time+" VARCHAR NOT NULL, "+db_notes_remind_date+" VARCHAR NOT NULL, "+db_notes_remind_time+" VARCHAR NOT NULL )";
 
         String create_db_stats = "CREATE TABLE "+db_stats+" ( "+db_stats_id+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "+db_stats_lecture_id+" INTEGER NOT NULL, "+db_stats_date+" VARCHAR NOT NULL ," +
-                ""+db_stats_status+" VARCHAR NOT NULL,  )";
+                ""+db_stats_status+" VARCHAR NOT NULL)";
 
         sqLiteDatabase.execSQL(create_db_schedule);
         sqLiteDatabase.execSQL(create_db_notes);

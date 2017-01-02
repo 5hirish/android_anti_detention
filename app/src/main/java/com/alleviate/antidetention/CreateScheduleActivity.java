@@ -2,6 +2,10 @@ package com.alleviate.antidetention;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -48,9 +52,17 @@ public class CreateScheduleActivity extends AppCompatActivity {
         final TextView tv_start_time = (TextView) findViewById(R.id.start_time);
         final TextView tv_end_time = (TextView) findViewById(R.id.end_time);
 
-        auto_lect.setAdapter(days_adapter);
-        auto_lect_staff.setAdapter(days_adapter);
-        auto_lect_hall.setAdapter(days_adapter);
+        ArrayList<String> lecture_array = create_array_adapter(R.id.lecture);
+        final ArrayAdapter<String> lecture_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, lecture_array);
+        auto_lect.setAdapter(lecture_adapter);
+
+        ArrayList<String> staff_array = create_array_adapter(R.id.lecturer);
+        final ArrayAdapter<String> staff_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, staff_array);
+        auto_lect_staff.setAdapter(staff_adapter);
+
+        ArrayList<String> hall_array = create_array_adapter(R.id.lect_room);
+        final ArrayAdapter<String> hall_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, hall_array);
+        auto_lect_hall.setAdapter(hall_adapter);
 
         final AlertDialog.Builder vschedule_day = new AlertDialog.Builder(CreateScheduleActivity.this);
 
@@ -218,11 +230,80 @@ public class CreateScheduleActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                new InsertSchedule().execute();
+
+                Snackbar.make(view, "Adding Schedule", Snackbar.LENGTH_LONG).show();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private ArrayList create_array_adapter(int res_type) {
+
+        SQLiteHelper db = new SQLiteHelper(getApplicationContext());
+        SQLiteDatabase dbr =db.getReadableDatabase();
+
+        ArrayList<String> array_adapter = new ArrayList<String>();
+
+        Cursor cur = dbr.rawQuery("SELECT * FROM "+SQLiteHelper.db_schedule, null);
+
+        if (res_type == R.id.lecture){
+
+            if (cur.getCount() != 0){
+                if(cur != null) {
+                    if (cur.moveToFirst()) {
+                        do {
+                            array_adapter.add(cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecture)));
+                        } while (cur.moveToNext());
+                    }
+                    cur.close();
+                }
+
+            } else {
+                array_adapter.add("Lecture Subject");
+            }
+
+        } else if (res_type == R.id.lecturer){
+
+            if (cur.getCount() != 0){
+                if(cur != null) {
+                    if (cur.moveToFirst()) {
+                        do {
+                            array_adapter.add(cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecturer_staff)));
+                        } while (cur.moveToNext());
+                    }
+                    cur.close();
+                }
+
+            } else {
+                array_adapter.add("Lecturer");
+            }
+
+        } else if (res_type == R.id.lect_room){
+
+            if (cur.getCount() != 0){
+                if(cur != null) {
+                    if (cur.moveToFirst()) {
+                        do {
+                            array_adapter.add(cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_lecturer_hall)));
+                        } while (cur.moveToNext());
+                    }
+                    cur.close();
+                }
+
+            } else {
+                array_adapter.add("Lecture Hall");
+            }
+
+        }
+
+        dbr.close();
+        db.close();
+
+        Toast.makeText(getApplicationContext(),""+array_adapter.size(),Toast.LENGTH_SHORT).show();
+
+        return array_adapter;
     }
 
     private boolean check_time(String start_time, String end_time) {
@@ -281,5 +362,36 @@ public class CreateScheduleActivity extends AppCompatActivity {
         }
 
         return time_diff;
+    }
+
+    private class InsertSchedule extends AsyncTask<Void, Void, Long> {
+
+        @Override
+        protected Long doInBackground(Void... params) {
+
+            SQLiteHelper db = new SQLiteHelper(getApplicationContext());
+            SQLiteDatabase dbw = db.getWritableDatabase();
+
+            ContentValues schedule_val = new ContentValues();
+            schedule_val.put(SQLiteHelper.db_schedule_day, db_day);
+            schedule_val.put(SQLiteHelper.db_schedule_start, db_start_time);
+            schedule_val.put(SQLiteHelper.db_schedule_end, db_end_time);
+            schedule_val.put(SQLiteHelper.db_schedule_lecture, db_lecture);
+            schedule_val.put(SQLiteHelper.db_schedule_lecturer_staff, db_lecture_staff);
+            schedule_val.put(SQLiteHelper.db_schedule_lecturer_hall, db_lecture_hall);
+
+            long resid = dbw.insert(SQLiteHelper.db_schedule, null, schedule_val);
+
+            dbw.close();
+            db.close();
+
+            return resid;
+        }
+
+        @Override
+        protected void onPostExecute(Long result) {
+
+            Log.d("Anti:Database", "Schedule Inserted " + result);
+        }
     }
 }
