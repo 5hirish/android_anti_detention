@@ -31,8 +31,8 @@
             android:id="@+id/start_time"
             android:textSize="20sp"
             android:text="00:00"
-            android:layout_marginLeft="50dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"/>
 
         <TextView
@@ -41,12 +41,33 @@
             android:id="@+id/end_time"
             android:text="00:00"
             android:textSize="20sp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignBaseline="@+id/start_time"
-            android:layout_marginRight="50dp"
-            android:layout_marginEnd="50dp"/>
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"/>
+
+        <TextView
+            android:text="00:00 hrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_alignBaseline="@+id/end_time"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/time_diff" />
+
+        <AutoCompleteTextView
+            android:id="@+id/lect_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/app_bar"
+            android:hint="Lecturer Hall"
+            android:layout_below="@+id/time_diff"
+            android:popupBackground="@color/white"
+            android:completionThreshold="1"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp" />
 
     </RelativeLayout>
 
