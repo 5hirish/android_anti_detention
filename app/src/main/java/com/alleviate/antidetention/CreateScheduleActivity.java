@@ -246,14 +246,18 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 db_lecture_hall = auto_lect_hall.getText().toString();
 
                 if (!db_lecture.isEmpty()) {
-                    if (!time_overlaps(db_day, db_start_time, db_end_time)){
-                        new InsertSchedule().execute();
+                    if (!db_start_time.equals(db_end_time)){
+                        if (!time_overlaps(db_day, db_start_time, db_end_time)){
+                            new InsertSchedule().execute();
 
-                        Toast.makeText(getApplicationContext(),"Schedule Added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Schedule Added", Toast.LENGTH_SHORT).show();
 
-                        finish();
+                            finish();
+                        } else {
+                            Snackbar.make(view,"Start and End Time Overlaps with other lecture on "+db_day,Snackbar.LENGTH_LONG).show();
+                        }
                     } else {
-                        Snackbar.make(view,"Start and End Time Overlaps with other lecture on "+db_day,Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view,"Start and End Time are the same!", Snackbar.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),"Lecture is empty", Toast.LENGTH_SHORT).show();
@@ -304,11 +308,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                         Calendar cal_end_selected = Calendar.getInstance();
                         cal_end_selected.setTime(picked_end_time);
 
-                        if (cal_start_selected.after(cal_end) && cal_end_selected.after(cal_end)) {
-
-                        } else if (cal_start_selected.before(cal_start) && cal_end_selected.before(cal_start)){
-
-                        } else {
+                        if (!(cal_start_selected.after(cal_end) || cal_end_selected.before(cal_start))){
                             return true;
                         }
                         //Toast.makeText(getActivity(),cal.getTime().toString(),Toast.LENGTH_SHORT).show();
@@ -399,7 +399,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
         Set<String> set = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         set.addAll(array_adapter);
 
-        Toast.makeText(getApplicationContext(),""+array_adapter.size(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),""+array_adapter.size(),Toast.LENGTH_SHORT).show();
 
         return new ArrayList<String>(set);
     }
