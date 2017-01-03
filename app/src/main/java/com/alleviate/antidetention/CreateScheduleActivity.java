@@ -3,6 +3,7 @@ package com.alleviate.antidetention;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -47,6 +48,10 @@ public class CreateScheduleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Intent in = getIntent();
+        int day_pos = in.getIntExtra("Day", 1);
+        db_day = get_week_day(day_pos);
+
         String[] week_days = getResources().getStringArray(R.array.week_day);
         final ArrayAdapter<String> days_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, week_days);
 
@@ -57,6 +62,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
         final TextView tv_lect_time = (TextView) findViewById(R.id.time_diff);
         final TextView tv_start_time = (TextView) findViewById(R.id.start_time);
         final TextView tv_end_time = (TextView) findViewById(R.id.end_time);
+
+        tv_day.setText(db_day);
 
         ArrayList<String> lecture_array = create_array_adapter(R.id.lecture);
         final ArrayAdapter<String> lecture_adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.select_dialog_item, lecture_array);
@@ -461,6 +468,35 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         return time_diff;
     }
+
+    private String get_week_day(int day) {
+        String str_day = "Sunday";
+        switch (day){
+            case 1:
+                str_day = "Sunday";
+                break;
+            case 2:
+                str_day = "Monday";
+                break;
+            case 3:
+                str_day = "Tuesday";
+                break;
+            case 4:
+                str_day = "Wednesday";
+                break;
+            case 5:
+                str_day = "Thursday";
+                break;
+            case 6:
+                str_day = "Friday";
+                break;
+            case 7:
+                str_day = "Saturday";
+                break;
+        }
+        return str_day;
+    }
+
 
     private class InsertSchedule extends AsyncTask<Void, Void, Long> {
 
