@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -141,7 +143,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(getApplicationContext(),"Time already past",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Start Time is after End Time!",Toast.LENGTH_LONG).show();
                 }
             }
         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false);
@@ -170,7 +172,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(getApplicationContext(),"Time already past",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Start Time is after End Time!",Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -240,14 +242,80 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
                 db_lecture_hall = auto_lect_hall.getText().toString();
 
-                new InsertSchedule().execute();
+                if (!db_lecture.isEmpty()) {
+                    if (!time_overlaps(db_day, db_start_time, db_end_time)){
+                        new InsertSchedule().execute();
 
-                Toast.makeText(getApplicationContext(),"Schedule Added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Schedule Added", Toast.LENGTH_SHORT).show();
 
-                finish();
+                        finish();
+                    } else {
+                        Snackbar.make(view,"Start and End Time Overlaps with other lecture on "+db_day,Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(),"Lecture is empty", Toast.LENGTH_SHORT).show();
+
+                }
+
+
             }
         });
 
+    }
+
+    private boolean time_overlaps(String db_day, String db_start_time, String db_end_time) {
+
+        SQLiteHelper db = new SQLiteHelper(getApplicationContext());
+        SQLiteDatabase dbr =db.getReadableDatabase();
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(SQLiteHelper.db_schedule);
+
+        String[] columns = {
+                SQLiteHelper.db_schedule_day,
+                SQLiteHelper.db_schedule_start,
+                SQLiteHelper.db_schedule_end};
+
+        Cursor cur = queryBuilder.query(dbr, columns, SQLiteHelper.db_schedule_day+" = ? ", new String[] {db_day}, null, null, null);
+        if(cur != null) {
+            if (cur.moveToFirst()) {
+                do {
+                    String start_time = cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_start));
+                    String end_time = cur.getString(cur.getColumnIndex(SQLiteHelper.db_schedule_start));
+
+                    SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
+
+                    try {
+                        Date date_start_time = time_gen.parse(start_time);
+                        Calendar cal_start = Calendar.getInstance();
+                        cal_start.setTime(date_start_time);
+
+                        Date picked_start_time = time_gen.parse(db_start_time);
+                        Calendar cal_start_selected = Calendar.getInstance();
+                        cal_start_selected.setTime(picked_start_time);
+
+                        Date date_end_time = time_gen.parse(end_time);
+                        Calendar cal_end = Calendar.getInstance();
+                        cal_end.setTime(date_end_time);
+
+                        Date picked_end_time = time_gen.parse(db_end_time);
+                        Calendar cal_end_selected = Calendar.getInstance();
+                        cal_end_selected.setTime(picked_end_time);
+
+                        if (cal_end_selected.before(cal_end) || cal_start_selected.after(cal_start)) {
+                            return true;
+                        }
+                        //Toast.makeText(getActivity(),cal.getTime().toString(),Toast.LENGTH_SHORT).show();
+
+                    }catch (ParseException exp){
+                        Log.d("Anti:Exception","Time Parsing exception - "+exp);
+
+                    }
+
+                } while (cur.moveToNext());
+            }
+            cur.close();
+        }
+        return false;
     }
 
     private ArrayList create_array_adapter(int res_type) {
@@ -257,7 +325,16 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         ArrayList<String> array_adapter = new ArrayList<String>();
 
-        Cursor cur = dbr.rawQuery("SELECT * FROM "+SQLiteHelper.db_schedule, null);
+        String[] columns = {
+                SQLiteHelper.db_schedule_lecture,
+                SQLiteHelper.db_schedule_lecturer_staff,
+                SQLiteHelper.db_schedule_lecturer_hall};
+
+        //Cursor cur = dbr.rawQuery("SELECT * FROM "+SQLiteHelper.db_schedule, null);
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(SQLiteHelper.db_schedule);
+
+        Cursor cur = queryBuilder.query(dbr, columns, null, null, null, null, null);
 
         if (res_type == R.id.lecture){
 
@@ -338,7 +415,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 return true;
             }
 
-        }catch (java.text.ParseException exp){
+        }catch (ParseException exp){
             Log.d("Anti:Exception","Date Parsing exception - "+exp);
         }
 

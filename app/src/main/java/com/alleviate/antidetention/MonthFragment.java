@@ -3,14 +3,17 @@ package com.alleviate.antidetention;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -33,12 +36,33 @@ public class MonthFragment extends Fragment {
         CalendarView tv_month = (CalendarView) view.findViewById(R.id.calendarView);
         tv_month.setMaxDate(Calendar.getInstance().getTimeInMillis());
 
-        SimpleDateFormat date_std = new SimpleDateFormat("dd/MM/yy");
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(tv_month.getDate());
 
-        Toast.makeText(getActivity(),""+date_std.format(cal.getTime()),Toast.LENGTH_SHORT).show();
+        tv_month.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+
+                String str_date = dayOfMonth+"/"+month+1+"/"+year;
+                SimpleDateFormat date_std = new SimpleDateFormat("dd/MM/yyyy");
+
+                try {
+                    Date picked_start_time = date_std.parse(str_date);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(picked_start_time);
+                    Toast.makeText(getActivity(),cal.getTime().toString(),Toast.LENGTH_SHORT).show();
+
+                }catch (ParseException exp) {
+                    Log.d("Anti:Exception","Time Parsing exception - "+exp);
+                }
+
+
+                Calendar cal = Calendar.getInstance();
+                //cal.setTimeInMillis(tv_month.getDate());
+
+            }
+        });
+
+
 
         // Inflate the layout for this fragment
         return view;
