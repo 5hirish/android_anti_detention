@@ -29,6 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 public class CreateScheduleActivity extends AppCompatActivity {
@@ -301,7 +304,11 @@ public class CreateScheduleActivity extends AppCompatActivity {
                         Calendar cal_end_selected = Calendar.getInstance();
                         cal_end_selected.setTime(picked_end_time);
 
-                        if (cal_end_selected.before(cal_end) || cal_start_selected.after(cal_start)) {
+                        if (cal_start_selected.after(cal_end) && cal_end_selected.after(cal_end)) {
+
+                        } else if (cal_start_selected.before(cal_start) && cal_end_selected.before(cal_start)){
+
+                        } else {
                             return true;
                         }
                         //Toast.makeText(getActivity(),cal.getTime().toString(),Toast.LENGTH_SHORT).show();
@@ -389,9 +396,12 @@ public class CreateScheduleActivity extends AppCompatActivity {
         dbr.close();
         db.close();
 
+        Set<String> set = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        set.addAll(array_adapter);
+
         Toast.makeText(getApplicationContext(),""+array_adapter.size(),Toast.LENGTH_SHORT).show();
 
-        return array_adapter;
+        return new ArrayList<String>(set);
     }
 
     private boolean check_time(String start_time, String end_time) {
