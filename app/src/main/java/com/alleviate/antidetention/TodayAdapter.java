@@ -19,10 +19,10 @@ import java.util.ArrayList;
  */
 public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
 
-    ArrayList schedule;
+    ArrayList<ScheduleInfo> schedule;
     Context context;
 
-    public TodayAdapter(Context context, ArrayList schedule) {
+    public TodayAdapter(Context context, ArrayList<ScheduleInfo> schedule) {
         this.schedule = schedule;
         this.context = context;
 
@@ -37,8 +37,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final TodayAdapter.ViewHolder holder, int position) {
 
-        holder.lecture.setText(schedule.get(position).toString());
-        //holder.lecturer.setText(mcu_movies.get(position).toString());
+        holder.lecture.setText(schedule.get(position).slect);
+        holder.lecturer.setText(schedule.get(position).slect_staff+" at "+schedule.get(position).slect_hall);
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
