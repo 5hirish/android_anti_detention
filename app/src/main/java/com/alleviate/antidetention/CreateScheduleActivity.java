@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class CreateScheduleActivity extends AppCompatActivity {
 
     String db_day, db_start_time, db_end_time, db_lecture, db_lecture_staff, db_lecture_hall;
-
+    Calendar default_end_cal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +128,8 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
         tv_lect_time.setText("01 hr, 00 min");
 
+        default_end_cal = Calendar.getInstance();
+
         final TimePickerDialog select_start_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int picked_hour, int picked_minute) {
@@ -136,6 +138,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 SimpleDateFormat time_std = new SimpleDateFormat("hh:mm a");
 
                 String str_start_time = picked_hour+":"+picked_minute;
+                String str_end_time = get_end_time(str_start_time);
 
                 if (check_time(str_start_time, db_end_time)) {
                     String time_diff = get_timediff(db_start_time, db_end_time);
@@ -147,6 +150,10 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
                         Date picked_start_time = time_gen.parse(str_start_time);
                         tv_start_time.setText(time_std.format(picked_start_time));
+                        Date picked_end_time = time_gen.parse(str_end_time);
+                        tv_end_time.setText(time_std.format(picked_end_time));
+                        default_end_cal.setTime(picked_end_time);
+                        Toast.makeText(getApplicationContext(),""+default_end_cal.getTime(), Toast.LENGTH_SHORT).show();
 
                     }catch (java.text.ParseException exp){
                         Log.d("Anti:Exception","Time Parsing exception - "+exp);
@@ -157,6 +164,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 }
             }
         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false);
+
 
         final TimePickerDialog select_end_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -186,7 +194,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 }
 
             }
-        }, cal.get(Calendar.HOUR_OF_DAY) + 1, cal.get(Calendar.MINUTE), false);
+        }, default_end_cal.get(Calendar.HOUR_OF_DAY), default_end_cal.get(Calendar.MINUTE), false);
 
         tv_start_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,6 +283,25 @@ public class CreateScheduleActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String get_end_time(String start_time) {
+
+        SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
+        String end_time = "";
+        try{
+
+            Date start_date = time_gen.parse(start_time);
+            Calendar start_date_cal = Calendar.getInstance();
+            start_date_cal.setTime(start_date);
+            start_date_cal.add(Calendar.HOUR_OF_DAY, 1);
+            end_time = start_date_cal.get(Calendar.HOUR_OF_DAY)+":"+start_date_cal.get(Calendar.MINUTE);
+            db_end_time = end_time;
+
+        }catch (ParseException exp){
+            Log.d("Anti:Exception","Date Parsing exception - "+exp);
+        }
+        return end_time;
     }
 
     private boolean time_overlaps(String db_day, String db_start_time, String db_end_time) {
