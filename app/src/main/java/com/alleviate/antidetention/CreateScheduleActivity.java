@@ -39,6 +39,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
     String db_day, db_start_time, db_end_time, db_lecture, db_lecture_staff, db_lecture_hall;
     Calendar default_end_cal;
+    TimePickerDialog select_start_time_dialog, select_end_time_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +130,9 @@ public class CreateScheduleActivity extends AppCompatActivity {
         tv_lect_time.setText("01 hr, 00 min");
 
         default_end_cal = Calendar.getInstance();
+        default_end_cal.add(Calendar.HOUR_OF_DAY, 1);
 
-        final TimePickerDialog select_start_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
+        select_start_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int picked_hour, int picked_minute) {
 
@@ -141,10 +143,11 @@ public class CreateScheduleActivity extends AppCompatActivity {
                 String str_end_time = get_end_time(str_start_time);
 
                 if (check_time(str_start_time, db_end_time)) {
-                    String time_diff = get_timediff(db_start_time, db_end_time);
-                    tv_lect_time.setText(time_diff);
 
                     db_start_time = picked_hour+":"+picked_minute;
+
+                    String time_diff = get_timediff(db_start_time, db_end_time);
+                    tv_lect_time.setText(time_diff);
 
                     try{
 
@@ -153,11 +156,12 @@ public class CreateScheduleActivity extends AppCompatActivity {
                         Date picked_end_time = time_gen.parse(str_end_time);
                         tv_end_time.setText(time_std.format(picked_end_time));
                         default_end_cal.setTime(picked_end_time);
-                        Toast.makeText(getApplicationContext(),""+default_end_cal.getTime(), Toast.LENGTH_SHORT).show();
 
                     }catch (java.text.ParseException exp){
                         Log.d("Anti:Exception","Time Parsing exception - "+exp);
                     }
+
+                    select_end_time_dialog.updateTime(default_end_cal.get(Calendar.HOUR_OF_DAY), default_end_cal.get(Calendar.MINUTE));
 
                 } else {
                     Toast.makeText(getApplicationContext(),"Start Time is after End Time!",Toast.LENGTH_LONG).show();
@@ -166,7 +170,7 @@ public class CreateScheduleActivity extends AppCompatActivity {
         }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false);
 
 
-        final TimePickerDialog select_end_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
+        select_end_time_dialog = new TimePickerDialog(CreateScheduleActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int picked_hour, int picked_minute) {
 
@@ -175,17 +179,18 @@ public class CreateScheduleActivity extends AppCompatActivity {
 
                 String str_end_time = picked_hour+":"+picked_minute;
 
-                if (check_time(db_start_time, str_end_time)){
-                    String time_diff = get_timediff(db_start_time, db_end_time);
-                    tv_lect_time.setText(time_diff);
+                if (check_time(db_start_time, str_end_time)) {
 
                     db_end_time = picked_hour+":"+picked_minute;
 
-                    try{
+                    String time_diff = get_timediff(db_start_time, db_end_time);
+                    tv_lect_time.setText(time_diff);
+
+                    try {
                         Date picked_end_time = time_gen.parse(str_end_time);
                         tv_end_time.setText(time_std.format(picked_end_time));
 
-                    }catch (java.text.ParseException exp){
+                    } catch (java.text.ParseException exp) {
                         Log.d("Anti:Exception","Time Parsing exception - "+exp);
                     }
 
