@@ -3,6 +3,7 @@ package com.alleviate.antidetention;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by felix on 9/6/16.
@@ -39,6 +42,20 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         holder.lecture.setText(schedule.get(position).slect);
         holder.lecturer.setText(schedule.get(position).slect_staff+" at "+schedule.get(position).slect_hall);
+
+        SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat time_std = new SimpleDateFormat("hh:mm a");
+
+        try {
+            Date start_time = time_gen.parse(schedule.get(position).sstart_time);
+            Date end_time = time_gen.parse(schedule.get(position).send_time);
+
+            holder.start_time.setText(time_std.format(start_time));
+            holder.end_time.setText(time_std.format(end_time));
+
+        } catch (java.text.ParseException exp) {
+            Log.d("Anti:Exception","Time Parsing exception - "+exp);
+        }
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +100,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         RelativeLayout relativeLayout;
         CheckBox present;
-        TextView lecture, lecturer;
+        TextView lecture, lecturer, start_time, end_time;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -92,6 +109,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             present = (CheckBox)itemView.findViewById(R.id.attendance);
             lecture = (TextView)itemView.findViewById(R.id.lecture);
             lecturer = (TextView)itemView.findViewById(R.id.lecturer);
+            start_time = (TextView)itemView.findViewById(R.id.start_time);
+            end_time = (TextView)itemView.findViewById(R.id.end_time);
 
         }
     }

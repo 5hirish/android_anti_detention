@@ -13,20 +13,6 @@
          android:layout_height="wrap_content"
          android:textAppearance="?android:attr/textAppearanceMedium"
          android:text="Medium Text"
-         android:id="@+id/start_time"
-         android:textSize="16sp"
-         android:layout_alignBaseline="@+id/lecture"
-         android:layout_alignBottom="@+id/lecture"
-         android:layout_alignParentRight="true"
-         android:layout_alignParentEnd="true"
-         android:layout_marginRight="16dp"
-         android:layout_marginEnd="16dp" />
-
-     <TextView
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:textAppearance="?android:attr/textAppearanceMedium"
-         android:text="Medium Text"
          android:id="@+id/lecture"
          android:layout_alignParentTop="true"
          android:layout_alignParentLeft="true"
@@ -48,6 +34,20 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/start_time"
+        android:textSize="16sp"
+        android:layout_alignBaseline="@+id/lecture"
+        android:layout_alignBottom="@+id/lecture"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
