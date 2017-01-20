@@ -6,7 +6,21 @@
     android:focusable="true"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:layout_height="90dp">
+    android:layout_height="100dp">
+
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+         android:text="Medium Text"
+         android:id="@+id/start_time"
+         android:textSize="16sp"
+         android:layout_alignBaseline="@+id/lecture"
+         android:layout_alignBottom="@+id/lecture"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentEnd="true"
+         android:layout_marginRight="16dp"
+         android:layout_marginEnd="16dp" />
 
      <TextView
          android:layout_width="wrap_content"
@@ -34,5 +48,26 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/end_time"
+        android:textSize="16sp"
+        android:layout_alignBottom="@+id/lecturer"
+        android:layout_alignRight="@+id/start_time"
+        android:layout_alignEnd="@+id/start_time" />
+
+    <TextView
+        android:text="to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dp"
+        android:id="@+id/to" />
 
 </RelativeLayout>

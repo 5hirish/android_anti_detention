@@ -1,5 +1,9 @@
 package com.alleviate.antidetention;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by felix on 3/1/17.
  */
@@ -17,4 +21,30 @@ public class ScheduleInfo {
         this.slect_staff = slect_staff;
         this.slect_hall = slect_hall;
     }
+
+    public Date getTime() {
+
+        SimpleDateFormat std_time = new SimpleDateFormat("HH:mm");
+        Date start_time = new Date();
+
+        try {
+            start_time = std_time.parse(this.sstart_time);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return start_time;
+    }
+
+    /*@Override
+    public boolean equals(Object obj) {
+
+        if ( this.aid == ((TaskInfo) obj).aid && this.tid == ((TaskInfo) obj).tid) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }*/
 }

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 /**
@@ -103,6 +105,13 @@ public class DayFragment extends Fragment {
         }
         dbr.close();
         db.close();
+
+        Collections.sort(schedule_list, new Comparator<ScheduleInfo>() {
+            @Override
+            public int compare(ScheduleInfo scheduleInfo1, ScheduleInfo scheduleInfo2) {
+                return scheduleInfo1.getTime().compareTo(scheduleInfo2.getTime());
+            }
+        });
 
         rvadpter = new DayAdapter(getActivity(), schedule_list);
         rv.setAdapter(rvadpter);
