@@ -45,13 +45,38 @@ public class DebugActivity extends AppCompatActivity {
             show_schedule_data();
         } else if (id == R.id.action_status){
 
-            //show_primary_data();
+            show_status_data();
+
         } else if (id == R.id.action_notes){
 
             //show_primary_data();
         }
 
         return true;
+    }
+
+    private void show_status_data() {
+        SQLiteHelper db = new SQLiteHelper(getApplicationContext());
+        SQLiteDatabase dbr =db.getReadableDatabase();
+
+        debug_info.setText(SQLiteHelper.db_stats+"\n\n");
+
+        Cursor cur = dbr.rawQuery("SELECT * FROM "+SQLiteHelper.db_stats, null);
+
+        if(cur != null){
+            if (cur.moveToFirst()){
+                do{
+                    debug_info.append(
+                            cur.getInt(cur.getColumnIndex(SQLiteHelper.db_stats_id))+") "+
+                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_date))+" - "+
+                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_lecture_id))+" - "+
+                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_date))+" - "+
+                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_status))+" \n "
+                    );
+
+                }while (cur.moveToNext());
+            }cur.close();
+        }dbr.close();db.close();
     }
 
     private void show_schedule_data() {
