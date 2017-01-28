@@ -25,25 +25,25 @@ import java.util.Date;
  * Created at Alleviate.
  * shirishkadam.com
  */
-public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
+public class DetailDayAdapter extends RecyclerView.Adapter<DetailDayAdapter.ViewHolder> {
 
     ArrayList<ScheduleInfo> schedule;
     Context context;
 
-    public TodayAdapter(Context context, ArrayList<ScheduleInfo> schedule) {
+    public DetailDayAdapter(Context context, ArrayList<ScheduleInfo> schedule) {
         this.schedule = schedule;
         this.context = context;
 
     }
 
     @Override
-    public TodayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DetailDayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.today_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final TodayAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final DetailDayAdapter.ViewHolder holder, int position) {
 
         holder.lecture.setText(schedule.get(position).slect);
         holder.lecturer.setText(schedule.get(position).slect_staff+" at "+schedule.get(position).slect_hall);
@@ -107,18 +107,14 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         int lecture_id = schedule.get(position).sid;
 
-        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
-
-        Calendar cal = Calendar.getInstance();
-        String today_date = std_stat_fmt.format(cal.getTime());
-        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+        String selected_date = schedule.get(position).selected_date;
 
         String status = "True";
 
         SQLiteHelper db = new SQLiteHelper(context);
         SQLiteDatabase dbr = db.getReadableDatabase();
 
-        Cursor cursor = dbr.query(SQLiteHelper.db_stats, new String[] {SQLiteHelper.db_stats_lecture_id, SQLiteHelper.db_stats_date,SQLiteHelper.db_stats_status}, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date}, null, null, null);
+        Cursor cursor = dbr.query(SQLiteHelper.db_stats, new String[] {SQLiteHelper.db_stats_lecture_id, SQLiteHelper.db_stats_date,SQLiteHelper.db_stats_status}, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, selected_date}, null, null, null);
 
         if(cursor != null){
             while (cursor.moveToNext()){
@@ -155,11 +151,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         int lecture_id = schedule.get(position).sid;
 
-        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
-
-        Calendar cal = Calendar.getInstance();
-        String today_date = std_stat_fmt.format(cal.getTime());
-        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+        String selected_date = schedule.get(position).selected_date;
 
         SQLiteHelper db = new SQLiteHelper(context);
         SQLiteDatabase dbw = db.getWritableDatabase();
@@ -167,7 +159,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         ContentValues update_stats = new ContentValues();
         update_stats.put(SQLiteHelper.db_stats_status, "False");
 
-        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
+        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, selected_date});
 
         dbw.close();
         db.close();
@@ -180,11 +172,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         int lecture_id = schedule.get(position).sid;
 
-        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
-
-        Calendar cal = Calendar.getInstance();
-        String today_date = std_stat_fmt.format(cal.getTime());
-        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+        String selected_date = schedule.get(position).selected_date;
 
         SQLiteHelper db = new SQLiteHelper(context);
         SQLiteDatabase dbw = db.getWritableDatabase();
@@ -192,7 +180,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         ContentValues update_stats = new ContentValues();
         update_stats.put(SQLiteHelper.db_stats_status, "True");
 
-        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
+        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, selected_date});
 
         dbw.close();
         db.close();

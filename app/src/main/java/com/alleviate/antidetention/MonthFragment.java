@@ -1,6 +1,7 @@
 package com.alleviate.antidetention;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -45,19 +46,22 @@ public class MonthFragment extends Fragment {
                 String str_date = dayOfMonth+"/"+month+1+"/"+year;
                 SimpleDateFormat date_std = new SimpleDateFormat("dd/MM/yyyy");
 
+                Intent in = new Intent(getActivity(), DetailDayActivity.class);
+
+
                 try {
                     Date picked_start_time = date_std.parse(str_date);
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(picked_start_time);
-                    Toast.makeText(getActivity(),cal.getTime().toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), date_std.format(cal.getTime()),Toast.LENGTH_SHORT).show();
+                    in.putExtra("Date", date_std.format(cal.getTime()));
+
 
                 }catch (ParseException exp) {
                     Log.d("Anti:Exception","Time Parsing exception - "+exp);
                 }
 
-
-                Calendar cal = Calendar.getInstance();
-                //cal.setTimeInMillis(tv_month.getDate());
+                startActivity(in);
 
             }
         });

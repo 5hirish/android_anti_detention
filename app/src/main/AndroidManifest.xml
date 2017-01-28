@@ -34,13 +34,12 @@
                 android:value="com.alleviate.antidetention.DashboardActivity" />
         </activity>
         <activity android:name=".NotesActivity" />
-        <activity android:name=".DebugActivity"></activity>
+        <activity android:name=".DebugActivity" />
 
         <receiver
             android:name=".Scheduler"
             android:enabled="true"
             android:exported="false" />
-
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"
@@ -54,6 +53,7 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".DetailDayActivity"></activity>
     </application>
 
 </manifest>
