@@ -1,6 +1,7 @@
 package com.alleviate.antidetention;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +62,9 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.ViewHolder> {
             public void onClick(View view) {
 
                 int position = holder.getAdapterPosition();
+
+                Intent in = new Intent(context, DetailScheduleActivity.class);
+                context.startActivity(in);
 
                 //update(mcu_movies.get(position).toString());
             }
