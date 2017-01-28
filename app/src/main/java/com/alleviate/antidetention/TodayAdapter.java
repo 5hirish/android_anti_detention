@@ -3,6 +3,7 @@ package com.alleviate.antidetention;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,7 +51,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
         SimpleDateFormat time_std = new SimpleDateFormat("hh:mm a");
 
-        holder.present.setChecked(true);
+        holder.present.setChecked(get_schedule_state(position));
 
         try {
             Date start_time = time_gen.parse(schedule.get(position).sstart_time);
@@ -92,6 +93,43 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     }
 
+    private boolean get_schedule_state(int position) {
+
+        int lecture_id = schedule.get(position).sid;
+
+        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
+
+        Calendar cal = Calendar.getInstance();
+        String today_date = std_stat_fmt.format(cal.getTime());
+        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+
+        boolean status = true;
+
+        SQLiteHelper db = new SQLiteHelper(context);
+        SQLiteDatabase dbr = db.getReadableDatabase();
+
+        Cursor cursor = dbr.query(SQLiteHelper.db_stats, new String[] {SQLiteHelper.db_stats_lecture_id, SQLiteHelper.db_stats_date,SQLiteHelper.db_stats_status}, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date}, null, null, null);
+
+        if(cursor != null){
+            while (cursor.moveToNext()){
+
+                int slid = cursor.getInt(cursor.getColumnIndex(SQLiteHelper.db_stats_lecture_id));
+                String sstatus = cursor.getString(cursor.getColumnIndex(SQLiteHelper.db_stats_status));
+
+                if (sstatus.equals("True")){
+                    status = true;
+                } else {
+                    status = false;
+                }
+
+            }cursor.close();
+        }
+        dbr.close();
+        db.close();
+
+        return status;
+    }
+
     @Override
     public int getItemCount() {
         return schedule.size();
@@ -115,6 +153,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
 
+        dbw.close();
+        db.close();
+
         Log.d("AntiDetention:Database","Attendance Status Updated "+resid);
 
     }
@@ -136,6 +177,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         update_stats.put(SQLiteHelper.db_stats_status, "True");
 
         long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
+
+        dbw.close();
+        db.close();
 
         Log.d("AntiDetention:Database","Attendance Status Updated "+resid);
 
