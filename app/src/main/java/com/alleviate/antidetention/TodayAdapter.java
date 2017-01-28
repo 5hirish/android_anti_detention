@@ -1,18 +1,22 @@
 package com.alleviate.antidetention;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -46,6 +50,8 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
         SimpleDateFormat time_std = new SimpleDateFormat("hh:mm a");
 
+        holder.present.setChecked(true);
+
         try {
             Date start_time = time_gen.parse(schedule.get(position).sstart_time);
             Date end_time = time_gen.parse(schedule.get(position).send_time);
@@ -69,11 +75,98 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             }
         });
 
+        holder.present.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+
+                    set_absence(holder.getAdapterPosition());
+
+                } else {
+
+                    set_present(holder.getAdapterPosition());
+
+                }
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         return schedule.size();
+    }
+
+    public void set_absence(int position) {
+
+        int lecture_id = schedule.get(position).sid;
+
+        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
+
+        Calendar cal = Calendar.getInstance();
+        String today_date = std_stat_fmt.format(cal.getTime());
+        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+
+        SQLiteHelper db = new SQLiteHelper(context);
+        SQLiteDatabase dbw = db.getWritableDatabase();
+
+        ContentValues update_stats = new ContentValues();
+        update_stats.put(SQLiteHelper.db_stats_status, "False");
+
+        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
+
+        Log.d("AntiDetention:Database","Attendance Status Updated "+resid);
+
+    }
+
+    public void set_present(int position) {
+
+        int lecture_id = schedule.get(position).sid;
+
+        SimpleDateFormat std_stat_fmt = new SimpleDateFormat("dd/MM/yy");
+
+        Calendar cal = Calendar.getInstance();
+        String today_date = std_stat_fmt.format(cal.getTime());
+        String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
+
+        SQLiteHelper db = new SQLiteHelper(context);
+        SQLiteDatabase dbw = db.getWritableDatabase();
+
+        ContentValues update_stats = new ContentValues();
+        update_stats.put(SQLiteHelper.db_stats_status, "True");
+
+        long resid = dbw.update(SQLiteHelper.db_stats, update_stats, SQLiteHelper.db_stats_lecture_id +" = ? AND "+ SQLiteHelper.db_stats_date + " = ?", new String[] {""+lecture_id, today_date});
+
+        Log.d("AntiDetention:Database","Attendance Status Updated "+resid);
+
+    }
+
+    private String get_week_day(int day) {
+        String str_day = "Sunday";
+        switch (day){
+            case 1:
+                str_day = "Sunday";
+                break;
+            case 2:
+                str_day = "Monday";
+                break;
+            case 3:
+                str_day = "Tuesday";
+                break;
+            case 4:
+                str_day = "Wednesday";
+                break;
+            case 5:
+                str_day = "Thursday";
+                break;
+            case 6:
+                str_day = "Friday";
+                break;
+            case 7:
+                str_day = "Saturday";
+                break;
+        }
+        return str_day;
     }
 
     // Remove a RecyclerView item containing a specified Data object

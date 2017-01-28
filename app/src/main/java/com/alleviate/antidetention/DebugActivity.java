@@ -68,7 +68,6 @@ public class DebugActivity extends AppCompatActivity {
                 do{
                     debug_info.append(
                             cur.getInt(cur.getColumnIndex(SQLiteHelper.db_stats_id))+") "+
-                                    cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_date))+" - "+
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_lecture_id))+" - "+
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_date))+" - "+
                                     cur.getString(cur.getColumnIndex(SQLiteHelper.db_stats_status))+" \n "
