@@ -50,8 +50,18 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
         SimpleDateFormat time_gen = new SimpleDateFormat("HH:mm");
         SimpleDateFormat time_std = new SimpleDateFormat("hh:mm a");
+        String status = get_schedule_state(position);
 
-        holder.present.setChecked(get_schedule_state(position));
+        if (status.equals("True")){
+            holder.present.setChecked(true);
+
+        } else if (status.equals("False")) {
+            holder.present.setChecked(false);
+
+        } else {
+            holder.present.setChecked(false);
+
+        }
 
         try {
             Date start_time = time_gen.parse(schedule.get(position).sstart_time);
@@ -93,7 +103,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     }
 
-    private boolean get_schedule_state(int position) {
+    private String get_schedule_state(int position) {
 
         int lecture_id = schedule.get(position).sid;
 
@@ -103,7 +113,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         String today_date = std_stat_fmt.format(cal.getTime());
         String today_day = get_week_day(cal.get(Calendar.DAY_OF_WEEK));
 
-        boolean status = true;
+        String status = "True";
 
         SQLiteHelper db = new SQLiteHelper(context);
         SQLiteDatabase dbr = db.getReadableDatabase();
@@ -117,9 +127,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 String sstatus = cursor.getString(cursor.getColumnIndex(SQLiteHelper.db_stats_status));
 
                 if (sstatus.equals("True")){
-                    status = true;
+                    status = "True";
+                } else if (sstatus.equals("False")){
+                    status = "False";
                 } else {
-                    status = false;
+                    status = "Neutral";
                 }
 
             }cursor.close();
