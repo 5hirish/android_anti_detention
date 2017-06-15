@@ -5,4 +5,5 @@ package com.alleviate.antidetention;
  */
 
 public class Constants {
+
 }
